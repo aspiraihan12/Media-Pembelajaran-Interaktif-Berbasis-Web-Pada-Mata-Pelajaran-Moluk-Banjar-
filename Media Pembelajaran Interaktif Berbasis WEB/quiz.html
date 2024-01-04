@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Halaman Kuis</title>
+
+    <!-- <link rel="stylesheet" href="tugas besar css.css"> -->
+    <link rel="stylesheet" href="soaljs/style/style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
+</head>
+<body class="quiz-body">
+    
+
+    <a href="halaman_menu.html" class="back-button" id="backButton">
+        <i class="bi bi-arrow-left" style="margin-right: 5px;"></i>Kembali
+      </a>
+      
+   
+    <div class="container">
+        <div class="ins">
+<br>
+            <div class="box jdl"><h2 style="color: whitesmoke; text-align: center;">Kuis</h2></div>
+        
+            <div class="besar" style = "text-align:left">
+                   
+                <div class="home-box custom-box ">
+                    <h3>Instruksi : </h3>
+                    <p>Total nomor dari soal : <span class="total-question">10</span></p>
+                    <button type="button" class="btn" onclick="playSoundAndRedirect();">Mulai Kuis</button>
+                </div>
+                <br>
+                <br>
+                <br>
+                <br>
+                <div class="quiz-box custom-box hide">
+
+                    <div class="timer-container">
+                        <i class="bi bi-clock" style="color: brown ;"></i> <span id="timer">05:00</span>
+                        <!-- <span id="timer">03:00</span> -->
+                    </div>
+<br>
+                    <div class="question-number">
+                    </div>
+                    <div class="question-text">
+                    </div>
+                    <div class="option-container">
+                    </div>
+                    <div class="next-question-btn">
+                        <button type="button" class="btn" onclick="next()">Selanjutnya</button>
+                    </div>
+                    <div class="answers-indicator">
+                      
+                    </div>
+                </div>
+            
+                <div class="result-box custom-box hide">
+           <h1> Hasil Kuis </h1>
+            
+            <table>
+                <tr>
+                    <td>NISN</td>
+                    <td><span id="hasilNISN" class="nisn"></span></td>
+                </tr>
+                
+                <tr>
+                    <td>Pemberitahuan</td>
+                    <td><span class="result-message"></span></td>
+                </tr>
+                <tr>
+                    <td>Total Quiz</td>
+                    <td><span class="total-question"></span></td>
+                </tr>
+                <tr>
+                    <td>Attempt</td>
+                    <td><span class="total-attempt"></span></td>
+                </tr>
+                <tr>
+                    <td>Benar</td>
+                    <td><span class="total-correct"></span></td>
+                </tr>
+                <tr>
+                    <td>Salah</td>
+                    <td><span class="total-wrong"></span></td>
+                </tr>
+                <tr>
+                    <td>Persentasi</td>
+                    <td><span class="percentage"></span></td>
+                </tr>
+                <tr>
+                    <td>Total Score</td>
+                    <td><span class="total-score"></span></td>
+                </tr>
+            </table>
+           
+            <!--<button type="button" class="btn" onclick="prevQuizLast()">Preview soal Kuis Terakhir</button>-->
+            <!-- <button type="button" class="btn" onclick="tryAgainQuiz()">Coba Lagi</button> -->
+            <button type="button" class="btn" onclick="CetakKuis()">Cetak Hasil</button>
+                </div>
+                <script src="soaljs/js/question.js"></script>
+                <script src="soaljs/js/app.js"></script>
+                
+                
+        </div>
+    </div>
+    <audio id="correctSound" src="soundepek/correct.mp3"></audio>
+    <audio id="ujian" src="soundepek/ujian.mp3"></audio>
+    <audio id="incorrectSound" src="soundepek/incorrect.mp3"></audio>    
+    <audio id="audio" src="soundepek/start-13691.mp3"></audio>
+    <audio id="buttonClickSound" src="soundepek/button-click.mp3"></audio>
+
+
+<script>
+
+function startTimer(duration, display) {
+    let timer = duration;
+    let minutes, seconds;
+    setInterval(function () {
+        minutes = parseInt(timer / 60, 10);
+        seconds = parseInt(timer % 60, 10);
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds;
+
+        if (--timer == 0) {
+            timer = 0;
+            // Tampilkan SweetAlert waktu habis
+            Swal.fire({
+                title: "Waktu Habis",
+                text: "Waktu untuk mengerjakan kuis telah habis.",
+                icon: "warning",
+                confirmButtonText: "Tutup"
+            }).then(() => {
+                quizResult();
+                // Redirect ke halaman hasil kuis atau tindakan yang diperlukan
+                 document.querySelector(".quiz-box").classList.add("hide");
+        document.querySelector(".result-box").classList.remove("hide");
+            }); 
+        }
+    }, 1000);
+    
+}
+
+// document.addEventListener("DOMContentLoaded", function () {
+//     const threeMinutes = 0.3* 60, // Waktu dalam detik
+//         display = document.querySelector("#timer");
+//     startTimer(threeMinutes, display);
+// });
+
+ function playSoundAndRedirect() {
+    // Tampilkan peringatan bahwa kuis hanya bisa dikerjakan sekali
+    Swal.fire({
+        title: "Perhatian!",
+        text: "Anda hanya dapat mengerjakan kuis ini sekali dan harus menjawab minimal 6 soal dengan benar. Jika siap, klik 'Lanjutkan'.",
+        icon: "warning",
+        confirmButtonText: "Lanjutkan",
+        showCancelButton: true,
+        cancelButtonText: "Batal"
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Lanjutkan dengan proses memasukkan NISN
+            const audio = document.getElementById("audio");
+            audio.currentTime = 0; // Set ulang posisi pemutaran audio
+            audio.play();
+
+            // Tampilkan Sweet Alert untuk memasukkan NISN
+            Swal.fire({
+                title: "Masukkan NISN",
+                html: '<input type="number" id="nisnInputAlert" class="swal2-input" placeholder="Masukkan NISN Anda">',
+                icon: "info",
+                showCancelButton: true,
+                confirmButtonText: "Mulai Kuis",
+                cancelButtonText: "Batal",
+                preConfirm: () => {
+                    const nisnInputAlert = document.getElementById("nisnInputAlert");
+                    return nisnInputAlert.value;
+                }
+            }).then((result) => {
+                if (!result.isDismissed && result.value) {
+                    const nisnValue = result.value;
+                    if (nisnValue.trim() === "") {
+                        Swal.fire("Error", "NISN tidak boleh kosong", "error");
+                    } else {
+                        document.querySelector("#hasilNISN ").innerHTML = nisnInputAlert.value;
+                        // NISN telah dimasukkan, lanjutkan dengan kuis
+
+                        startQuiz(result.value); // Kirim nilai NISN ke fungsi startQuiz
+
+                        const threeMinutes = 5 * 60, // Waktu dalam detik (misalnya, 3 menit)
+                    display = document.querySelector("#timer");
+                startTimer(threeMinutes, display);
+                    }
+                }
+            });
+        }
+    });
+}
+
+
+</script>
+   <script src="soaljs/js/app.js"></script>
+   <script src="soaljs/js/question.js"></script>
+</body>
+</html>

@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Restoe Boemi</title>
+    <link rel="stylesheet" href="lightBox.css" />
+    <style>
+      /* ... kode CSS sebelumnya ... */
+    
+      .button-box {
+        margin-top: -60px;
+        background-color: #3498db;
+        border: none;
+        color: white;
+        padding: 30px 20px;
+        font-size: 16px;
+        cursor: pointer;
+        border-radius: 5px;
+        transition: background-color 0.3s;
+        display: inline-block;
+        align-items: center;
+      }
+    
+      .button-box:hover {
+        background-color: #7362d3;
+      }
+    </style>
+    
+  </head>
+  <body>
+
+    
+    <div class="container-lightbox">
+     
+      <ul class="gallery">
+        
+        <a href="#gambar-1">
+          <button class="button-box"><span>Klik disni untuk petunjuk</span></button>
+        </a>
+        <div class="overlay" id="gambar-1">
+          <a href="#" class="close">x close</a>
+          <img
+            src="images/Desain petunjuk.jpg"
+          />
+        </div>
+
+        <div class="clear"></div>
+      </ul>
+    </div>
+  </body>
+</html>
